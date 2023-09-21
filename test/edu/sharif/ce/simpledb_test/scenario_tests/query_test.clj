@@ -65,9 +65,9 @@
                             :where
                             [?student :class ?c]
                             [?teacher :name "Teacher-0"]
-                            (?has-class ?teacher ?c)
+                            [?teacher :has-class ?c]
                             :def
-                            (?has-class {?teacher ?c}
+                            (:has-class {?teacher ?c}
                                         (contains? (-> teacher?
                                                        :classes)
                                                    ?c))]
@@ -77,16 +77,16 @@
                               (concat @class-B)
                               set)]
       (t/is (= case-3-expected res)))
-    (timbre/info "---case #4---") ;; commons students of teacher 0 and 1
+    (timbre/info "---case #4---") ;; common students of teacher 0 and 1
     (let [q               '[:find  ?student
                             :where
                             [?student :class ?c]
                             [?teacher-0 :name "Teacher-0"]
                             [?teacher-1 :name "Teacher-1"]
-                            (?has-class ?teacher-0 ?c)
-                            (?has-class ?teacher-1 ?c)
+                            [?teacher-0 :has-class ?c]
+                            [?teacher-1 :has-class ?c]
                             :def
-                            (?has-class {?teacher ?c}
+                            (:has-class {?teacher ?c}
                                         (contains? (-> teacher?
                                                        :classes)
                                                    ?c))]
