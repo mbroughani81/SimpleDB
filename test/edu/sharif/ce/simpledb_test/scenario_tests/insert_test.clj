@@ -1,11 +1,11 @@
-(ns edu.sharif.ce.simpledb-test.scenario-tests.insert
+(ns edu.sharif.ce.simpledb-test.scenario-tests.insert-test
   (:require
    [clojure.test :as t]
    [edu.sharif.ce.simpledb.core :as simpledb]
    [edu.sharif.ce.simpledb.proto :as simpledb-proto]
    [taoensso.timbre :as timbre]))
 
-(t/deftest test
+(t/deftest simpledb-test
   (let [db  (simpledb/start-db)
         col (simpledb/make-collection)
         _   (simpledb-proto/add-collection! db col)]
@@ -15,7 +15,7 @@
                                     :name       "ali"
                                     :student-id "123456"})
 
-    ;; inserting things other than map should raise
+    ;; inserting things other than map should throw
     ;; exception
     (timbre/info "---case #2---")
     (try

@@ -5,7 +5,7 @@
    [edu.sharif.ce.simpledb.proto :as simpledb-proto]
    [taoensso.timbre :as timbre]))
 
-(t/deftest test
+(t/deftest simpledb-test
   (let [db  (simpledb/start-db)
         col (simpledb/make-collection)]
     ;; cannot insert to a collection not created yet!
