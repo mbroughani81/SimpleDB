@@ -5,7 +5,7 @@
    [edu.sharif.ce.simpledb.proto :as simpledb-proto]
    [taoensso.timbre :as timbre]))
 
-(defn insert-init-data [db col-students col-teachers]
+(defn insert-init-data [db]
   (let [students (atom '())]
     (doseq [id (range 10)]
       (let [stu-a {:student-id id
@@ -20,50 +20,42 @@
                    :name       (str "stu-" (+ 20 id))
                    :gender     (if (odd? id) "male" "female")
                    :class      "C"}]
-        (simpledb-proto/insert! db col-students stu-a)
-        (simpledb-proto/insert! db col-students stu-b)
-        (simpledb-proto/insert! db col-students stu-c)
+        (simpledb-proto/insert! db stu-a)
+        (simpledb-proto/insert! db stu-b)
+        (simpledb-proto/insert! db stu-c)
         (swap! students #(conj % stu-a))
         (swap! students #(conj % stu-b))
         (swap! students #(conj % stu-c))))
-    (simpledb-proto/insert! db col-teachers {:teacher-id 0
-                                             :name       "Teacher-0"
-                                             :classes    ["A" "B"]})
-    (simpledb-proto/insert! db col-teachers {:teacher-id 1
-                                             :name       "Teacher-1"
-                                             :classes    ["B" "C"]})
+    (simpledb-proto/insert! db {:teacher-id 0
+                                :name       "Teacher-0"
+                                :classes    ["A" "B"]})
+    (simpledb-proto/insert! db {:teacher-id 1
+                                :name       "Teacher-1"
+                                :classes    ["B" "C"]})
     (-> @students)))
 
 (t/deftest simpledb-test
-  (let [db           (simpledb/start-db)
-        col-students (simpledb/make-collection)
-        col-teachers (simpledb/make-collection)
-        _            (simpledb-proto/add-collection! db col-students)
-        _            (simpledb-proto/add-collection! db col-teachers)
-        students     (insert-init-data db col-students col-teachers)
-        path         "some-path-in-project"
-        _            (simpledb-proto/flush! db col-students path)
-        new-db       (simpledb/start-db)
-        q            '[:find ?student
-                       :where
-                       [?student :class _]]]
+  (let [db       (simpledb/start-db)
+        students (insert-init-data db)
+        path     "some-path-in-project"
+        _        (simpledb-proto/flush! db path)
+        new-db   (simpledb/start-db)
+        q        '[:find ?student
+                   :where
+                   [?student :class _]]]
     (timbre/info "---case #1---")
-    ;; at first, it should not have any collection.
-    ;; so it throws error
-    (try
-      (simpledb-proto/query new-db q)
-      (catch Exception e
-        (timbre/info "exception => " e)))
-
+    ;; at first, there is not any data in new-db, so there
+    ;; is an empty list returned from the query
+    (let [case-1-expected (set [])
+          res             (set (simpledb-proto/query new-db q))]
+      (t/is (= case-1-expected res)))
+    ;; after retrieving, the res should be equal to students set
     (timbre/info "---case #2---")
-    ;; after creating the collection, using the flushed file,
-    ;; we can query the db.
-    (let [case-2-expected (set students)]
-      (simpledb-proto/retrieve db
-                               (simpledb/make-collection)
-                               path)
-      (let [res (simpledb-proto/query new-db q)]
-        (t/is (= case-2-expected res))))))
+    (let [case-2-expected (set students)
+          _               (simpledb-proto/retrieve db
+                                                   path)
+          res             (set (simpledb-proto/query new-db q))]
+      (t/is (= case-2-expected res)))))
 
 (comment
   (t/run-tests)

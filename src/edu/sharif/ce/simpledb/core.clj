@@ -5,12 +5,9 @@
 
 (defrecord SimpleDB []
   proto/DB
-  (add-collection! [db col])
-  (insert! [db col x])
+  (insert! [db x])
   (query [db q])
-  (flush! [db col path]))
+  (flush! [db path]))
 
 (defn start-db []
   (map->SimpleDB {}))
-
-(defn make-collection [])

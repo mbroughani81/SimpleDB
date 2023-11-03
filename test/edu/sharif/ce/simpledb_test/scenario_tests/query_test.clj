@@ -5,7 +5,7 @@
    [edu.sharif.ce.simpledb.proto :as simpledb-proto]
    [taoensso.timbre :as timbre]))
 
-(defn insert-init-data [db col-students col-teachers]
+(defn insert-init-data [db]
   (let [class-A (atom '())
         class-B (atom '())
         class-C (atom '())]
@@ -22,27 +22,23 @@
                    :name       (str "stu-" (+ 20 id))
                    :gender     (if (odd? id) "male" "female")
                    :class      "C"}]
-        (simpledb-proto/insert! db col-students stu-a)
-        (simpledb-proto/insert! db col-students stu-b)
-        (simpledb-proto/insert! db col-students stu-c)
+        (simpledb-proto/insert! db stu-a)
+        (simpledb-proto/insert! db stu-b)
+        (simpledb-proto/insert! db stu-c)
         (swap! class-A #(conj % stu-a))
         (swap! class-B #(conj % stu-b))
         (swap! class-C #(conj % stu-c))))
-    (simpledb-proto/insert! db col-teachers {:teacher-id 0
-                                             :name       "Teacher-0"
-                                             :classes    ["A" "B"]})
-    (simpledb-proto/insert! db col-teachers {:teacher-id 1
-                                             :name       "Teacher-1"
-                                             :classes    ["B" "C"]})
+    (simpledb-proto/insert! db {:teacher-id 0
+                                :name       "Teacher-0"
+                                :classes    ["A" "B"]})
+    (simpledb-proto/insert! db {:teacher-id 1
+                                :name       "Teacher-1"
+                                :classes    ["B" "C"]})
     (-> [@class-A @class-B @class-B])))
 
 (t/deftest simpledb-test
   (let [db                        (simpledb/start-db)
-        col-students              (simpledb/make-collection)
-        col-teachers              (simpledb/make-collection)
-        _                         (simpledb-proto/add-collection! db col-students)
-        _                         (simpledb-proto/add-collection! db col-teachers)
-        [class-A class-B class-C] (insert-init-data db col-students col-teachers)
+        [class-A class-B class-C] (insert-init-data db)
         _                         (timbre/info "ok => " @class-A)]
     ;; query with incorrect format should be rejected.
     (timbre/info "---case #1---")
