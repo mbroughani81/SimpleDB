@@ -36,7 +36,7 @@
                                 :classes    ["B" "C"]})
     (-> [@class-A @class-B @class-B])))
 
-(t/deftest simpledb-test
+(t/deftest Query-Test
   (let [db                        (simpledb/start-db)
         [class-A class-B class-C] (insert-init-data db)
         _                         (timbre/info "ok => " @class-A)]

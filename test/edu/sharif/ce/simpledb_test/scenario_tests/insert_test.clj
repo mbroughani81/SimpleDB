@@ -5,7 +5,7 @@
    [edu.sharif.ce.simpledb.proto :as simpledb-proto]
    [taoensso.timbre :as timbre]))
 
-(t/deftest simpledb-test
+(t/deftest Insert-Test
   (let [db (simpledb/start-db)]
     ;; inserting a simple map
     (timbre/info "---case #1---")

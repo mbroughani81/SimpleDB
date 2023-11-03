@@ -34,7 +34,7 @@
                                 :classes    ["B" "C"]})
     (-> @students)))
 
-(t/deftest simpledb-test
+(t/deftest Flush-And-Retrieve-Test
   (let [db       (simpledb/start-db)
         students (insert-init-data db)
         path     "some-path-in-project"
