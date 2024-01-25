@@ -16,7 +16,5 @@
     ;; inserting things other than map should throw
     ;; exception
     (timbre/info "---case #2---")
-    (try
-      (simpledb-proto/insert! db '(1 2 3 4))
-      (catch Exception e
-        (timbre/info "exception => " e)))))
+    (t/is (thrown? clojure.lang.ExceptionInfo
+                   (simpledb-proto/insert! db '(1 2 3 4))))))
