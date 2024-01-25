@@ -42,9 +42,9 @@
         _                         (timbre/info "ok => " @class-A)]
     ;; query with incorrect format should be rejected.
     (timbre/info "---case #1---")
-    t/is (thrown? clojure.lang.ExceptionInfo
-                  (let [q   {:invalid-query-format "?"}
-                        res (simpledb-proto/query db q)]))
+    (t/is (thrown? clojure.lang.ExceptionInfo
+                   (let [q   {:invalid-query-format "?"}
+                         res (simpledb-proto/query db q)])))
 
     (timbre/info "---case #2---") ;; student of class A
     (let [q               '[:find  ?student
