@@ -7,5 +7,7 @@
   (query
     [db q]
     [db q {:keys [fn async?]}])
+  (piped-query
+    [db q xf])
   (flush! [db path])
   (retrieve [db path]))

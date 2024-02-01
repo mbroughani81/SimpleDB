@@ -39,7 +39,7 @@
 (t/deftest Query-Test
   (let [db                        (simpledb/start-db)
         [class-A class-B class-C] (insert-init-data db)
-        _                         (timbre/info "ok => " @class-A)]
+        _                         (timbre/info "ok => " class-A)]
     ;; query with incorrect format should be rejected.
     (timbre/info "---case #1---")
     (t/is (thrown? clojure.lang.ExceptionInfo

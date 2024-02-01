@@ -37,6 +37,7 @@
 (t/deftest Flush-And-Retrieve-Test
   (let [db       (simpledb/start-db)
         students (insert-init-data db)
+        _        (timbre/info "students => " students)
         path     "some-path-in-project"
         _        (simpledb-proto/flush! db path)
         new-db   (simpledb/start-db)

@@ -12,6 +12,7 @@
   (query [db q]
     (proto/query db q {:fn     nil
                        :async? false}))
+  (piped-query [db q xf])
   (query [db q {:keys [fn async?]}])
   (flush! [db path]))
 
